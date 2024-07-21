@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "allowJs": true,
+    "target": "es5",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmitOnError": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "module": "ESNext",
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "sourceMap": true,
+    "declarationMap": true,
+    "strict": true
+  },
+  "include": ["./src/**/*"],
+  "ts-node": { "esm": true }
+}
