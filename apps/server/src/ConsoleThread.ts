@@ -12,11 +12,6 @@ export class ConsoleThread extends EventEmitter implements TConsoleThread{
     loopInterval: number;
     timer: ReturnType<typeof setInterval> | null = null;
 
-    /**
-     * @param {object} options
-     * @param {Gateway} options.parentThread The parent thread
-     * @param {ServerLogger} options.log The logger
-     */
     constructor() {
         super();
         this.name = "ReadInput";

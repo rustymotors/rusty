@@ -1,7 +1,6 @@
 import * as http from "node:http";
 import * as net from "node:net";
 import type { NodeServer, TConsoleThread } from "./types.js";
-import { emitKeypressEvents } from "node:readline";
 import { ConsoleThread } from "./ConsoleThread.js";
 
 class WrappedServer implements NodeServer {
@@ -57,7 +56,7 @@ export class ServerController {
   private _status: string = "stopped";
 
   constructor() {
-    console.log("ServerController");
+    console.debug("ServerController");
     this.httpServer = new WrappedServer(http.createServer(httpListener));
     this.loginServer = new WrappedServer(net.createServer(tcpListener));
     this.personaServer = new WrappedServer(net.createServer(tcpListener));
@@ -90,7 +89,7 @@ export class ServerController {
 
     // Exit the process
     process.exit(0);
-}
+  }
 
   async handleReadThreadEvent(event: string) {
     if (event === "userExit") {
@@ -105,39 +104,49 @@ export class ServerController {
   }
 
   public async start() {
-    console.log("ServerController.start");
+    console.debug("ServerController.start");
     this._status = "started";
     await this.httpServer.listen(3000);
+    console.info("HTTP Server started");
     await this.loginServer.listen(8226);
+    console.info("Login Server started");
     await this.personaServer.listen(8228);
+    console.info("Persona Server started");
     await this.lobbyServer.listen(7003);
+    console.info("Lobby Server started");
     await this.databaseServer.listen(43300);
-    console.log("Servers started");
+    console.info("Database Server started");
+    console.info("Servers started");
   }
 
   public async stop() {
-    console.log("ServerController.stop");
+    console.debug("ServerController.stop");
     this._status = "stopped";
     await this.httpServer.close();
+    console.info("HTTP Server stopped");
     await this.loginServer.close();
+    console.info("Login Server stopped");
     await this.personaServer.close();
+    console.info("Persona Server stopped");
     await this.lobbyServer.close();
+    console.info("Lobby Server stopped");
     await this.databaseServer.close();
-    console.log("Servers stopped");
+    console.info("Database Server stopped");
+    console.info("Servers stopped");
   }
 
   public async restart() {
-        // Stop the GatewayServer
-        await this.stop();
+    // Stop the GatewayServer
+    await this.stop();
 
-        console.info("=== Restarting... ===");
+    console.info("=== Restarting... ===");
 
-        // Start the GatewayServer
-        await this.start();
+    // Start the GatewayServer
+    await this.start();
   }
 
   public status() {
-    console.log("ServerController.status");
+    console.debug("ServerController.status");
     return this._status;
   }
 }
