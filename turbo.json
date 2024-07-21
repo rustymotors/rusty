@@ -12,9 +12,10 @@
       "dependsOn": ["^clean"]
     },
     "start": {
-      "dependsOn": ["^start", "check-types"]
+      "dependsOn": ["^start", "build"]
     },
     "dev": {
+      "dependsOn": ["^dev", "check-types"],
       "persistent": true,
       "cache": false
     }
