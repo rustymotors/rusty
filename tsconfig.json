@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./built",
+    "outDir": "./dist",
     "allowJs": true,
     "target": "es5",
     "noImplicitAny": true,
@@ -8,7 +8,14 @@
     "noFallthroughCasesInSwitch": true,
     "noEmitOnError": true,
     "strictNullChecks": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "module": "NodeNext",
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "sourceMap": true,
+    "declarationMap": true,
+    "strict": true
   },
   "include": ["./src/**/*"]
 }

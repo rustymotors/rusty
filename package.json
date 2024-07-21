@@ -2,6 +2,7 @@
   "name": "rusty",
   "version": "1.0.0",
   "description": "The Rusty Motors monorepo",
+  "type": "module",
   "scripts": {},
   "keywords": [],
   "author": "",
