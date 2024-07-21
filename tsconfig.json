@@ -9,7 +9,7 @@
     "noEmitOnError": true,
     "strictNullChecks": true,
     "noImplicitThis": true,
-    "module": "NodeNext",
+    "module": "ESNext",
     "verbatimModuleSyntax": true,
     "declaration": true,
     "declarationDir": "./dist",
@@ -17,5 +17,6 @@
     "declarationMap": true,
     "strict": true
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "ts-node": { "esm": true }
 }
