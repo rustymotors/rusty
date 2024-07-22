@@ -15,5 +15,19 @@
     }
   },
   "defaultBase": "main",
-  "nxCloudAccessToken": "ODcyNmM1ZTEtNWY2Yi00NDg4LWEzMTYtMDBkYzExMTdjNDgwfHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "ODcyNmM1ZTEtNWY2Yi00NDg4LWEzMTYtMDBkYzExMTdjNDgwfHJlYWQtd3JpdGU=",
+  "plugins": [
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "testTargetName": "test"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    }
+  ]
 }

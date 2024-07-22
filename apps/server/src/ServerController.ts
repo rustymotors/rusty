@@ -1,97 +1,103 @@
 import * as http from "node:http";
 import * as net from "node:net";
-import type { NodeServer, TConsoleThread } from "./types.js";
 import { ConsoleThread } from "./ConsoleThread.js";
+import { WrappedServer } from "./WrappedServer.js";
+import { exit } from "node:process";
+import { log } from "./Logger.js";
 
-class WrappedServer implements NodeServer {
-  constructor(private server: net.Server) {}
-
-  async listen(port: number) {
-    return new Promise<void>((resolve, reject) => {
-      this.server.listen(port, () => {
-        resolve();
-      });
-    });
-  }
-
-  async close() {
-    return new Promise<void>((resolve, reject) => {
-      this.server.close((err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
-  }
-}
-
-async function httpListener(
-  req: http.IncomingMessage,
-  res: http.ServerResponse
+/**
+ *
+ * @param {import("node:http").IncomingMessage} req
+ * @param {import("node:http").ServerResponse} res
+ */
+function handleRequest(
+  req: import("node:http").IncomingMessage,
+  res: import("node:http").ServerResponse
 ) {
-  console.log(
-    `New request from ${req.socket.remoteAddress} for ${req.url} with method ${req.method}`
+  log.debug("AuthController.handleConnection");
+  log.debug(
+    `${req.method} ${req.url} HTTP/${req.httpVersion} ${req.socket.remoteAddress}`
   );
   res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello, World!\n");
+  res.end("Hello, World2!\n");
 }
 
-async function tcpListener(socket: net.Socket) {
-  console.log(
-    `New connection from ${socket.remoteAddress} on port ${socket.remotePort} to port ${socket.localPort}`
-  );
-  socket.end("Hello, World!\n");
+/**
+ * Handles a connection from a socket.
+ *
+ * @param {import("node:net").Socket} socket - The socket object representing the connection.
+ * @returns {void}
+ */
+function handleConnection(socket: import("node:net").Socket): void {
+  log.debug("LoginController.handleConnection");
+  socket.on("data", (data) => {
+    log.debug(data.toString());
+    socket.end();
+  });
 }
 
 export class ServerController {
-  private httpServer: NodeServer;
-  private loginServer: NodeServer;
-  private personaServer: NodeServer;
-  private lobbyServer: NodeServer;
-  private databaseServer: NodeServer;
-  private readThread: TConsoleThread;
+  private _httpServer: WrappedServer;
+  private _loginServer: WrappedServer;
+  private _personaServer: WrappedServer;
+  private _lobbyServer: WrappedServer;
+  private _databaseServer: WrappedServer;
+  private _readThread: ConsoleThread;
 
-  private _status: string = "stopped";
+  _status = "stopped";
 
   constructor() {
-    console.debug("ServerController");
-    this.httpServer = new WrappedServer(http.createServer(httpListener));
-    this.loginServer = new WrappedServer(net.createServer(tcpListener));
-    this.personaServer = new WrappedServer(net.createServer(tcpListener));
-    this.lobbyServer = new WrappedServer(net.createServer(tcpListener));
-    this.databaseServer = new WrappedServer(net.createServer(tcpListener));
+    log.debug("ServerController");
+    this._httpServer = new WrappedServer(http.createServer(handleRequest));
+    this._loginServer = new WrappedServer(net.createServer(handleConnection));
+    this._personaServer = new WrappedServer(net.createServer(handleConnection));
+    this._lobbyServer = new WrappedServer(net.createServer(handleConnection));
+    this._databaseServer = new WrappedServer(
+      net.createServer(handleConnection)
+    );
 
-    this.readThread = new ConsoleThread();
-    this.readThread.on("userExit", () =>
-      this.handleReadThreadEvent("userExit")
-    );
-    this.readThread.on("userRestart", () =>
-      this.handleReadThreadEvent("userRestart")
-    );
-    this.readThread.on("userHelp", () =>
-      this.handleReadThreadEvent("userHelp")
-    );
+    this._readThread = new ConsoleThread();
+    this._readThread.on("userExit", () => {
+      void this.handleReadThreadEvent("userExit");
+    });
+    this._readThread.on("userRestart", () => {
+      void this.handleReadThreadEvent("userRestart");
+    });
+    this._readThread.on("userHelp", () => {
+      void this.handleReadThreadEvent("userHelp");
+    });
   }
 
+  /**
+   * Displays the help menu with available commands.
+   */
   help() {
-    console.info("=== Help ===");
-    console.info("x: Exit");
-    console.info("r: Restart");
-    console.info("?: Help");
-    console.info("============");
+    log.info("=== Help ===");
+    log.info("x: Exit");
+    log.info("r: Restart");
+    log.info("?: Help");
+    log.info("============");
   }
 
-  async exit() {
+  /**
+   * Stops the GatewayServer and exits the process.
+   * @returns {Promise<void>} A promise that resolves when the server is stopped and the process is exited.
+   */
+  async exit(): Promise<void> {
     // Stop the GatewayServer
     await this.stop();
 
     // Exit the process
-    process.exit(0);
+    exit(0);
   }
 
-  async handleReadThreadEvent(event: string) {
+  /**
+   * Handles the read thread event.
+   *
+   * @param {string} event - The event to handle.
+   * @returns {Promise<void>} - A promise that resolves when the event is handled.
+   */
+  async handleReadThreadEvent(event: string): Promise<void> {
     if (event === "userExit") {
       await this.exit();
     }
@@ -103,50 +109,57 @@ export class ServerController {
     }
   }
 
-  public async start() {
-    console.debug("ServerController.start");
+  /**
+   * Starts the server and listens on the specified ports.
+   * @returns {Promise<void>} A promise that resolves when the server has started.
+   */
+  async start(): Promise<void> {
+    log.debug("ServerController.start");
     this._status = "started";
-    await this.httpServer.listen(3000);
-    console.info("HTTP Server started");
-    await this.loginServer.listen(8226);
-    console.info("Login Server started");
-    await this.personaServer.listen(8228);
-    console.info("Persona Server started");
-    await this.lobbyServer.listen(7003);
-    console.info("Lobby Server started");
-    await this.databaseServer.listen(43300);
-    console.info("Database Server started");
-    console.info("Servers started");
+    await this._httpServer.listen(3000);
+    log.info("HTTP Server started");
+    await this._loginServer.listen(8226);
+    log.info("Login Server started");
+    await this._personaServer.listen(8228);
+    log.info("Persona Server started");
+    await this._lobbyServer.listen(7003);
+    log.info("Lobby Server started");
+    await this._databaseServer.listen(43300);
+    log.info("Database Server started");
+    log.info("Servers started");
   }
 
-  public async stop() {
-    console.debug("ServerController.stop");
+  /**
+   * Stops the server and closes all associated servers.
+   * @returns {Promise<void>} A promise that resolves when the server is stopped.
+   */
+  async stop(): Promise<void> {
+    log.debug("ServerController.stop");
     this._status = "stopped";
-    await this.httpServer.close();
-    console.info("HTTP Server stopped");
-    await this.loginServer.close();
-    console.info("Login Server stopped");
-    await this.personaServer.close();
-    console.info("Persona Server stopped");
-    await this.lobbyServer.close();
-    console.info("Lobby Server stopped");
-    await this.databaseServer.close();
-    console.info("Database Server stopped");
-    console.info("Servers stopped");
+    await this._httpServer.close();
+    log.info("HTTP Server stopped");
+    await this._loginServer.close();
+    log.info("Login Server stopped");
+    await this._personaServer.close();
+    log.info("Persona Server stopped");
+    await this._lobbyServer.close();
+    log.info("Lobby Server stopped");
+    await this._databaseServer.close();
+    log.info("Database Server stopped");
+    log.info("Servers stopped");
   }
 
-  public async restart() {
+  /**
+   * Restarts the server by stopping and then starting the GatewayServer.
+   * @returns {Promise<void>} A promise that resolves when the server has been restarted.
+   */
+  async restart(): Promise<void> {
     // Stop the GatewayServer
     await this.stop();
 
-    console.info("=== Restarting... ===");
+    log.info("=== Restarting... ===");
 
     // Start the GatewayServer
     await this.start();
-  }
-
-  public status() {
-    console.debug("ServerController.status");
-    return this._status;
   }
 }
