@@ -15,7 +15,6 @@
     }
   },
   "defaultBase": "main",
-  "nxCloudAccessToken": "ODcyNmM1ZTEtNWY2Yi00NDg4LWEzMTYtMDBkYzExMTdjNDgwfHJlYWQtd3JpdGU=",
   "plugins": [
     {
       "plugin": "@nx/vite/plugin",
