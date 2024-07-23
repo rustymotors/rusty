@@ -38,5 +38,5 @@
       }
     }
   ],
-  "nxCloudAccessToken": "${NX_CLOUD_ACCESS_TOKEN}"
+  "nxCloudAccessToken": "set in env"
 }
