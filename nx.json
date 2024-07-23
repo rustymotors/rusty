@@ -2,15 +2,24 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "clean": {
-      "dependsOn": ["^clean"]
+      "dependsOn": [
+        "^clean"
+      ]
     },
     "build": {
-      "dependsOn": ["clean", "^build"],
-      "outputs": ["{projectRoot}/dist"],
+      "dependsOn": [
+        "clean",
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
       "cache": true
     },
     "check-types": {
-      "dependsOn": ["^check-types"],
+      "dependsOn": [
+        "^check-types"
+      ],
       "cache": true
     }
   },
@@ -28,5 +37,6 @@
         "targetName": "lint"
       }
     }
-  ]
+  ],
+  "nxCloudAccessToken": "ZmZiYTgyODAtMjBjZC00Y2RjLTk1NDAtNjcwODI3ZGFmZmJlfHJlYWQtd3JpdGU="
 }
