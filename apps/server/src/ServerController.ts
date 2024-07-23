@@ -3,23 +3,44 @@ import * as net from "node:net";
 import { ConsoleThread } from "./ConsoleThread.js";
 import { WrappedServer } from "./WrappedServer.js";
 import { exit } from "node:process";
-import { log } from "./Logger.js";
+import { log } from "@rusty/util";
+import { handleWebRequests } from "@rusty/web";
+
+function headerstoRecords(
+  headers: import("node:http").IncomingHttpHeaders
+): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    if (Array.isArray(value)) {
+      result[key] = value.join(", ");
+    } else {
+      if (typeof key === "string" && typeof value === "string") {
+        result[key] = value;
+      }
+    }
+  }
+  return result;
+}
 
 /**
  *
  * @param {import("node:http").IncomingMessage} req
  * @param {import("node:http").ServerResponse} res
  */
-function handleRequest(
+function handleIncomingRequest(
   req: import("node:http").IncomingMessage,
   res: import("node:http").ServerResponse
 ) {
-  log.debug("AuthController.handleConnection");
-  log.debug(
-    `${req.method} ${req.url} HTTP/${req.httpVersion} ${req.socket.remoteAddress}`
-  );
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello, World2!\n");
+  const { statusCode, body, headers } = handleWebRequests({
+    headers: headerstoRecords(req.headers),
+    remoteAddress: req.socket.remoteAddress || "",
+    method: req.method || "",
+    url: req.url || "",
+    query: {},
+  });
+
+  res.writeHead(statusCode, headers);
+  res.end(body);
 }
 
 /**
@@ -28,7 +49,7 @@ function handleRequest(
  * @param {import("node:net").Socket} socket - The socket object representing the connection.
  * @returns {void}
  */
-function handleConnection(socket: import("node:net").Socket): void {
+function handleSocketConnection(socket: import("node:net").Socket): void {
   log.debug("LoginController.handleConnection");
   socket.on("data", (data) => {
     log.debug(data.toString());
@@ -48,12 +69,20 @@ export class ServerController {
 
   constructor() {
     log.debug("ServerController");
-    this._httpServer = new WrappedServer(http.createServer(handleRequest));
-    this._loginServer = new WrappedServer(net.createServer(handleConnection));
-    this._personaServer = new WrappedServer(net.createServer(handleConnection));
-    this._lobbyServer = new WrappedServer(net.createServer(handleConnection));
+    this._httpServer = new WrappedServer(
+      http.createServer(handleIncomingRequest)
+    );
+    this._loginServer = new WrappedServer(
+      net.createServer(handleSocketConnection)
+    );
+    this._personaServer = new WrappedServer(
+      net.createServer(handleSocketConnection)
+    );
+    this._lobbyServer = new WrappedServer(
+      net.createServer(handleSocketConnection)
+    );
     this._databaseServer = new WrappedServer(
-      net.createServer(handleConnection)
+      net.createServer(handleSocketConnection)
     );
 
     this._readThread = new ConsoleThread();

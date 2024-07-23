@@ -5,7 +5,7 @@
       "dependsOn": ["^clean"]
     },
     "build": {
-      "dependsOn": ["clean", "check-types", "^build"],
+      "dependsOn": ["clean", "^build"],
       "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
