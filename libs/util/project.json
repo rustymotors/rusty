@@ -1,0 +1,12 @@
+{
+  "targets": {
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "command": "vitest run",
+        "coverage": true,
+        "reporter": "verbose"
+      }
+    }
+  }
+}

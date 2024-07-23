@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
     "allowJs": true,
-    "target": "es5",
+    "target": "ESNext",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noEmitOnError": true,
     "strictNullChecks": true,
     "noImplicitThis": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "verbatimModuleSyntax": true,
     "declaration": true,
-    "declarationDir": "./dist",
+
     "sourceMap": true,
     "declarationMap": true,
-    "strict": true
+    "strict": true,
+    "moduleResolution": "NodeNext"
   },
-  "include": ["./src/**/*"],
-  "ts-node": { "esm": true }
+  "files": [],
+  "references": [{ "path": "./apps/server" }]
 }
