@@ -38,5 +38,5 @@
       }
     }
   ],
-  "nxCloudAccessToken": "MzExMjdmNmMtNzI1OC00ZmYwLWFkYmYtYzEzMzNmYjVlODU0fHJlYWQ="
+  "nxCloudAccessToken": "${NX_CLOUD_ACCESS_TOKEN}"
 }
