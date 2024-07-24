@@ -17,7 +17,7 @@ export class AuthLogin {
     password: string
   ): Promise<Omit<UserAttributes, "id"> | null> {
     log.debug("AuthLogin.login");
-    log.debug(`username: ${username} password: ${password}`);
+    log.debug(`Searching for user: ${username}`);
     const user = await User.findOne({
       where: {
         username,
@@ -26,9 +26,11 @@ export class AuthLogin {
     });
 
     if (!user) {
+      log.debug("User not found");
       return null;
     }
 
+    log.debug("User found");
     return {
       username: user.username,
       password: user.password,
