@@ -27,20 +27,19 @@ function headerstoRecords(
  * @param {import("node:http").IncomingMessage} req
  * @param {import("node:http").ServerResponse} res
  */
-function handleIncomingRequest(
+async function handleIncomingRequest(
   req: import("node:http").IncomingMessage,
   res: import("node:http").ServerResponse
 ) {
-  const { statusCode, body, headers } = handleWebRequests({
+  const response = await handleWebRequests({
     headers: headerstoRecords(req.headers),
     remoteAddress: req.socket.remoteAddress || "",
     method: req.method || "",
     url: req.url || "",
-    query: {},
   });
 
-  res.writeHead(statusCode, headers);
-  res.end(body);
+  res.writeHead(response.statusCode, response.headers);
+  res.end(response.body);
 }
 
 /**
@@ -70,7 +69,13 @@ export class ServerController {
   constructor() {
     log.debug("ServerController");
     this._httpServer = new WrappedServer(
-      http.createServer(handleIncomingRequest)
+      http.createServer((req, res) => {
+        handleIncomingRequest(req, res).catch((err) => {
+          log.error((err as Error).message);
+          res.writeHead(500, { "Content-Type": "text/plain" });
+          res.end("Internal Server Error\n");
+        });
+      })
     );
     this._loginServer = new WrappedServer(
       net.createServer(handleSocketConnection)
