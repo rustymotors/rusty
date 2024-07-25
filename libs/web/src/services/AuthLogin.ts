@@ -21,8 +21,8 @@ export class AuthLogin {
         password,
       });
       log.debug(`User created: ${user ? user.username : "null"}`);
-    } catch (error) {
-      log.error(`Error creating user: ${error.message}`);
+    } catch (error: unknown) {
+      log.error(`Error creating user: ${(error as Error).message}`);
       throw error;
     }
   }
