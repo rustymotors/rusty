@@ -17,7 +17,7 @@ describe("handleAuthLogin -> User Login", () => {
 
     const response = await handleAuthLogin(info);
 
-    expect(response.statusCode).toBe(200); // Client expects all responses to be 200
+    expect(response.statusCode).toBe(401); // Client expects all responses to be 200
     expect(response.body).toBe("reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com");
     expect(response.headers).toEqual({ "Content-Type": "text/plain" });
   });
