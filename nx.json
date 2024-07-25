@@ -5,12 +5,12 @@
       "dependsOn": ["^clean"]
     },
     "build": {
-      "dependsOn": ["check-types", "^build"],
+      "dependsOn": ["^build"],
       "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
     "check-types": {
-      "dependsOn": ["^check-types"],
+      "dependsOn": ["check-types", "^check-types"],
       "cache": true
     },
     "test": {
