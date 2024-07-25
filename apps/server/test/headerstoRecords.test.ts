@@ -30,6 +30,4 @@ describe("headerstoRecords", () => {
 
     expect(result).toEqual(expected);
   });
-
-  // Add more test cases as needed
 });
