@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { handleAuthLogin, createUser } from "../src/services/AuthLogin.js";
 
-describe("handleAuthLogin", () => {
-  it("should return 400 if username or password is empty", async () => {
+describe("handleAuthLogin -> User Login", () => {
+  it("When either username or passwand is not supplied, expect a generic error", async () => {
     const searchParams = new URLSearchParams();
     searchParams.set("username", "validuser");
     searchParams.set("password", "");
@@ -17,12 +17,12 @@ describe("handleAuthLogin", () => {
 
     const response = await handleAuthLogin(info);
 
-    expect(response.statusCode).toBe(400);
-    expect(response.body).toBe("Bad Request\n");
+    expect(response.statusCode).toBe(200); // Client expects all responses to be 200
+    expect(response.body).toBe("reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com");
     expect(response.headers).toEqual({ "Content-Type": "text/plain" });
   });
 
-  it("should return 401 if user is not found", async () => {
+  it("When user is not found, expect a generic error", async () => {
     const searchParams = new URLSearchParams();
     searchParams.set("username", "nonexistent");
     searchParams.set("password", "password");
@@ -36,8 +36,8 @@ describe("handleAuthLogin", () => {
 
     const response = await handleAuthLogin(info);
 
-    expect(response.statusCode).toBe(401);
-    expect(response.body).toBe("Unauthorized\n");
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toBe("reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com");
     expect(response.headers).toEqual({ "Content-Type": "text/plain" });
   });
 

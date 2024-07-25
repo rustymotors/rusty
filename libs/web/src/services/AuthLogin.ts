@@ -60,32 +60,45 @@ export async function handleAuthLogin(
   const password = (info.searchParams.get("password") as string) || "";
 
   if (username === "" || password === "") {
-    return Promise.resolve({
-      statusCode: 400,
-      body: "Bad Request\n",
-      headers: { "Content-Type": "text/plain" },
-    });
+    return generateLoginError("INV-200", "Unable to login", "https://rusty-motors.com");
   }
 
   const authLogin = new AuthLogin(db);
   const user = await authLogin.login(username, password);
 
   if (!user) {
-    return {
-      statusCode: 401,
-      body: "Unauthorized\n",
-      headers: { "Content-Type": "text/plain" },
-    };
+    return generateLoginError("INV-200", "Unable to login", "https://rusty-motors.com");
   }
 
+  const token = "abc123";
+
+  return constructLoginResponse(`Valid=TRUE\nTicket=${token}`)
+}
+
+function constructLoginResponse(body = ""): RequestResponse {
   return {
     statusCode: 200,
-    body: `Valid=TRUE\nTicket=`,
+    body,
     headers: { "Content-Type": "text/plain" },
   };
 }
 
-export async function createUser(username: string, password: string): Promise<void> {
+function generateLoginError(
+  errorCode = "INV-200",
+  errorText = "Unable to login",
+  errorUrl = "https://rusty-motors.com"
+): RequestResponse | PromiseLike<RequestResponse> {
+  return {
+    statusCode: 200,
+    body: `reasoncode=${errorCode}\nreasontext=${errorText}\nreasonurl=${errorUrl}`,
+    headers: { "Content-Type": "text/plain" },
+  };
+}
+
+export async function createUser(
+  username: string,
+  password: string
+): Promise<void> {
   const authLogin = new AuthLogin(db);
   await authLogin.create(username, password);
 }
