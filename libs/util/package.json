@@ -11,7 +11,8 @@
     "clean": "rm -rf dist",
     "build": "tsc --build  --verbose",
     "test": "vitest",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src"
   },
   "keywords": [],
   "author": "",
