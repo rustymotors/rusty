@@ -6,12 +6,9 @@ export default defineConfig({
       enabled: true,
       all: true,
       exclude: [
-        "src/**/*.spec.ts",
-        "src/**/*.test.ts",
-        "bin/**/*.ts",
-        "ecosystem.config.js",
-        "migrate.ts",
-        "packages/**/*.d.ts",
+        "dist/**",
+        "eslint.config.js",
+        "vitest.config.js"
       ],
       reporter: ["lcov", "text", "cobertura"],
     },
