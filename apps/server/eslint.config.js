@@ -19,6 +19,6 @@ export default tseslint.config(
     ...tseslint.configs.disableTypeChecked,
   },
   {
-    ignores: ["**/dist/*"],
+    ignores: ["**/coverage/*", "**/dist/*"],
   }
 );

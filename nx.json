@@ -5,29 +5,19 @@
       "dependsOn": ["^clean"]
     },
     "build": {
-      "dependsOn": ["clean", "^build"],
+      "dependsOn": ["^build"],
       "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
     "check-types": {
       "dependsOn": ["^check-types"],
       "cache": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/coverage"]
     }
   },
   "defaultBase": "main",
-  "nxCloudAccessToken": "MmE0NmEwNmEtMzYyNy00Yzk2LTkxYzYtYWY1ZTYwMzZlYmMzfHJlYWQ=",
-  "plugins": [
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "testTargetName": "test"
-      }
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    }
-  ]
+  "nxCloudAccessToken": "MmE0NmEwNmEtMzYyNy00Yzk2LTkxYzYtYWY1ZTYwMzZlYmMzfHJlYWQ="
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { handleAuthLogin } from "../src/services/AuthLogin.js";
+
+import { handleAuthLogin, createUser } from "../src/services/AuthLogin.js";
 
 describe("handleAuthLogin", () => {
   it("should return 400 if username or password is empty", async () => {
@@ -7,10 +8,10 @@ describe("handleAuthLogin", () => {
     searchParams.set("username", "validuser");
     searchParams.set("password", "");
     const info = {
-        headers: {},
-        remoteAddress: "",
-        method: "",
-        pathname: "",
+      headers: {},
+      remoteAddress: "",
+      method: "",
+      pathname: "",
       searchParams,
     };
 
@@ -26,10 +27,10 @@ describe("handleAuthLogin", () => {
     searchParams.set("username", "nonexistent");
     searchParams.set("password", "password");
     const info = {
-        headers: {},
-        remoteAddress: "",
-        method: "",
-        pathname: "",
+      headers: {},
+      remoteAddress: "",
+      method: "",
+      pathname: "",
       searchParams,
     };
 
@@ -45,22 +46,19 @@ describe("handleAuthLogin", () => {
     searchParams.set("username", "validuser");
     searchParams.set("password", "password");
     const info = {
-        headers: {},
-        remoteAddress: "",
-        method: "",
-        pathname: "",
+      headers: {},
+      remoteAddress: "",
+      method: "",
+      pathname: "",
       searchParams,
     };
+    
+    await createUser("validuser", "password");
 
     const response = await handleAuthLogin(info);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toBe(
-      JSON.stringify({
-        username: "validuser",
-        password: "password",
-      })
-    );
-    expect(response.headers).toEqual({ "Content-Type": "application/json" });
+    expect(response.body).toContain(`Valid=TRUE\nTicket=`);
+    expect(response.headers).toEqual({ "Content-Type": "text/plain" });
   });
 });

@@ -12,6 +12,17 @@ export class AuthLogin {
     this.sequelize = sequelize;
   }
 
+  async create(username: string, password: string): Promise<void> {
+    log.debug("AuthLogin.create");
+    log.debug(`Creating user: ${username}`);
+    const user = await User.create({
+      username,
+      password,
+    });
+
+    log.debug(`User created: ${user ? user.username : "null"}`);    
+  }
+
   async login(
     username: string,
     password: string
@@ -65,7 +76,12 @@ export async function handleAuthLogin(
 
   return {
     statusCode: 200,
-    body: JSON.stringify(user),
-    headers: { "Content-Type": "application/json" },
+    body: `Valid=TRUE\nTicket=`,
+    headers: { "Content-Type": "text/plain" },
   };
+}
+
+export async function createUser(username: string, password: string): Promise<void> {
+  const authLogin = new AuthLogin(db);
+  await authLogin.create(username, password);
 }

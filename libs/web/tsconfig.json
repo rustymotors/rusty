@@ -7,5 +7,5 @@
   },
   "include": ["index.ts", "src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"],
-  "references": [{ "path": "../../libs/util" }]
+  "references": [{ "path": "../util" }]
 }

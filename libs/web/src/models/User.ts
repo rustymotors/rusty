@@ -14,9 +14,9 @@ export class User
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
-  public id!: number;
-  public username!: string;
-  public password!: string;
+  declare id: number;
+  declare username: string;
+  declare password: string;
 }
 
 User.init(
