@@ -15,12 +15,16 @@ export class AuthLogin {
   async create(username: string, password: string): Promise<void> {
     log.debug("AuthLogin.create");
     log.debug(`Creating user: ${username}`);
-    const user = await User.create({
-      username,
-      password,
-    });
-
-    log.debug(`User created: ${user ? user.username : "null"}`);    
+    try {
+      const user = await User.create({
+        username,
+        password,
+      });
+      log.debug(`User created: ${user ? user.username : "null"}`);
+    } catch (error) {
+      log.error(`Error creating user: ${error.message}`);
+      throw error;
+    }
   }
 
   async login(
