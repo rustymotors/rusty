@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { headerstoRecords } from "../src/headerstoRecords.js";
-import type { IncomingHttpHeaders } from "http";
+import type { IncomingHttpHeaders } from "node:http";
 
 describe("headerstoRecords", () => {
   test("should convert headers to records", () => {
