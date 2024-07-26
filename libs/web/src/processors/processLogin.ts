@@ -2,6 +2,7 @@ import { log } from "@rusty/util";
 import { extractCredentials, validateCredentials } from "../helpers.js";
 import { userLogin } from "../services/AuthLogin.js";
 import type { parsedHttpRequestData, RequestResponse } from "../types.js";
+import { getServerURL } from "@rusty/config";
 
 /**
  * Handles the authentication login process.
@@ -19,16 +20,13 @@ export async function authenticateUser(
 
     await userLogin(username, password);
 
+    // TODO: Implement token generation
     const token = "abc123";
 
     return constructLoginResponse(`Valid=TRUE\nTicket=${token}`);
   } catch (error: unknown) {
     log.error(`Error validating credentials: ${(error as Error).message}`);
-    return generateLoginError(
-      "INV-200",
-      "Unable to login",
-      "https://rusty-motors.com"
-    );
+    return generateLoginError("INV-200", "Unable to login", getServerURL());
   }
 }
 

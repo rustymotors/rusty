@@ -94,6 +94,55 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4(@types/node@20.14.12)(@vitest/ui@2.0.4)
 
+  libs/config:
+    dependencies:
+      '@rusty/util':
+        specifier: workspace:*
+        version: link:../util
+      '@sentry/node':
+        specifier: ^8.20.0
+        version: 8.20.0
+      '@sentry/profiling-node':
+        specifier: ^8.20.0
+        version: 8.20.0
+      pino:
+        specifier: 9.3.1
+        version: 9.3.1
+    devDependencies:
+      '@types/node':
+        specifier: 20.14.12
+        version: 20.14.12
+      '@types/pino':
+        specifier: 7.0.5
+        version: 7.0.5
+      '@vitest/coverage-v8':
+        specifier: ^2.0.4
+        version: 2.0.4(vitest@2.0.4(@types/node@20.14.12)(@vitest/ui@2.0.4))
+      '@vitest/ui':
+        specifier: ^2.0.4
+        version: 2.0.4(vitest@2.0.4)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      nx:
+        specifier: 19.5.1
+        version: 19.5.1
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.14.12)(typescript@5.5.4)
+      tslib:
+        specifier: ^2.6.3
+        version: 2.6.3
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+      vite:
+        specifier: 2.0.4
+        version: 2.0.4
+      vitest:
+        specifier: ^2.0.4
+        version: 2.0.4(@types/node@20.14.12)(@vitest/ui@2.0.4)
+
   libs/util:
     dependencies:
       '@sentry/node':
@@ -142,6 +191,9 @@ importers:
 
   libs/web:
     dependencies:
+      '@rusty/config':
+        specifier: workspace:*
+        version: link:../config
       '@rusty/util':
         specifier: workspace:*
         version: link:../util
