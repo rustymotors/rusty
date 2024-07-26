@@ -5,22 +5,7 @@ import { WrappedServer } from "./WrappedServer.js";
 import { exit } from "node:process";
 import { log } from "@rusty/util";
 import { handleWebRequests } from "@rusty/web";
-
-function headerstoRecords(
-  headers: import("node:http").IncomingHttpHeaders
-): Record<string, string> {
-  const result: Record<string, string> = {};
-  for (const [key, value] of Object.entries(headers)) {
-    if (Array.isArray(value)) {
-      result[key] = value.join(", ");
-    } else {
-      if (typeof key === "string" && typeof value === "string") {
-        result[key] = value;
-      }
-    }
-  }
-  return result;
-}
+import { headersToRecords } from "./headersToRecords.js";
 
 /**
  *
@@ -32,7 +17,7 @@ async function handleIncomingRequest(
   res: import("node:http").ServerResponse
 ) {
   const response = await handleWebRequests({
-    headers: headerstoRecords(req.headers),
+    headers: headersToRecords(req.headers),
     remoteAddress: req.socket.remoteAddress || "",
     method: req.method || "",
     url: req.url || "",
