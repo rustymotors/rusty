@@ -1,7 +1,11 @@
 import { User, type UserAttributes } from "../models/User.js";
 import type { parsedHttpRequestData, RequestResponse } from "../types.js";
 import { log } from "@rusty/util";
-import { ErrorMissingCredentials, ErrorUserExists, ErrorUserNotFound } from "./errors.js";
+import {
+  ErrorMissingCredentials,
+  ErrorUserNotFound,
+  handleCreateUserError,
+} from "../errors.js";
 
 function validateCredentials(username: string, password: string): void {
   if (username === "") {
@@ -29,31 +33,6 @@ export async function createUser(
   } catch (error: unknown) {
     handleCreateUserError(error);
   }
-}
-
-/**
- * Handles the error that occurs when creating a user.
- * If the error message indicates that the username must be unique,
- * it throws an ErrorUserExists with the original error as the cause.
- * Otherwise, it throws a generic Error with the original error as the cause.
- *
- * @param error - The error that occurred during user creation.
- * @throws {ErrorUserExists} - If the error message indicates that the username must be unique.
- * @throws {Error} - If the error message does not indicate that the username must be unique.
- * @returns {never} - This function never returns a value.
- */
-function handleCreateUserError(error: unknown): never {
-  if ((error as Error).message.includes("username must be unique")) {
-    const err = new Error("Error creating user");
-    err.name = "ErrorUserExists";
-    err.cause = error;
-    log.error(`Error creating user: ${(error as Error).message}`);
-    throw err;
-  }
-  const err = new ErrorUserExists("Error creating user");
-  err.cause = error;
-  log.error(`Error creating user: ${(error as Error).message}`);
-  throw err;
 }
 
 /**

@@ -1,14 +1,14 @@
-import { describe, expect, it, test } from "vitest";
-
+import { describe, expect, it } from "vitest";
+import { handleAuthLogin, createUser } from "../src/services/AuthLogin.js";
 import {
-  handleAuthLogin,
-  createUser,
-  deleteUser,
-} from "../src/services/AuthLogin.js";
-import { ErrorMissingCredentials, ErrorUserExists } from "../src/errors.js";
+  ErrorMissingCredentials,
+  ErrorUserExists,
+} from "../src/errors.js";
+import { deleteUser } from "../src/services/AuthLogin.js";
 
 describe("handleAuthLogin -> User Login", () => {
   it("When either username or password is not supplied, expect a generic error", async () => {
+    // Arrange
     const searchParams = new URLSearchParams();
     searchParams.set("username", "validuser");
     searchParams.set("password", "");
@@ -20,9 +20,11 @@ describe("handleAuthLogin -> User Login", () => {
       searchParams,
     };
 
+    // Act
     const response = await handleAuthLogin(info);
 
-    expect(response.statusCode).toBe(200); // Client expects all responses to be 200
+    // Assert
+    expect(response.statusCode).toBe(200);
     expect(response.body).toBe(
       "reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com"
     );
@@ -30,6 +32,7 @@ describe("handleAuthLogin -> User Login", () => {
   });
 
   it("When user is not found, expect a generic error", async () => {
+    // Arrange
     const searchParams = new URLSearchParams();
     searchParams.set("username", "nonexistent");
     searchParams.set("password", "password");
@@ -41,8 +44,10 @@ describe("handleAuthLogin -> User Login", () => {
       searchParams,
     };
 
+    // Act
     const response = await handleAuthLogin(info);
 
+    // Assert
     expect(response.statusCode).toBe(200);
     expect(response.body).toBe(
       "reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com"
@@ -51,6 +56,7 @@ describe("handleAuthLogin -> User Login", () => {
   });
 
   it("should return 200 with user data if login is successful", async () => {
+    // Arrange
     const searchParams = new URLSearchParams();
     searchParams.set("username", "validuser");
     searchParams.set("password", "password");
@@ -64,8 +70,10 @@ describe("handleAuthLogin -> User Login", () => {
 
     await createUser("validuser", "password");
 
+    // Act
     const response = await handleAuthLogin(info);
 
+    // Assert
     expect(response.statusCode).toBe(200);
     expect(response.body).toContain(`Valid=TRUE\nTicket=`);
     expect(response.headers).toEqual({ "Content-Type": "text/plain" });
@@ -78,13 +86,10 @@ describe("AuthLogin -> createUser", () => {
     const user = "";
     const password = "password";
 
-    // Assert
-    try {
-      await createUser(user, password);
-    } catch (error: unknown) {
-      expect(error).toBeInstanceOf(ErrorMissingCredentials);
-      expect((error as Error).message).toBe("Username is required");
-    }
+    // Act & Assert
+    await expect(createUser(user, password)).rejects.toThrow(
+      ErrorMissingCredentials
+    );
   });
 
   it("when password is blank, expect an ErrorMissingCredentials to be thrown", async () => {
@@ -92,13 +97,10 @@ describe("AuthLogin -> createUser", () => {
     const user = "validuser";
     const password = "";
 
-    // Assert
-    try {
-      await createUser(user, password);
-    } catch (error: unknown) {
-      expect(error).toBeInstanceOf(ErrorMissingCredentials);
-      expect((error as Error).message).toBe("Password is required");
-    }
+    // Act & Assert
+    await expect(createUser(user, password)).rejects.toThrow(
+      ErrorMissingCredentials
+    );
   });
 
   it("when user already exists, expect an ErrorUserExists to be thrown", async () => {
@@ -108,15 +110,11 @@ describe("AuthLogin -> createUser", () => {
     await deleteUser(user);
     await createUser(user, password);
 
-    // Assert
-    try {
-      await createUser(user, password);
-    } catch (error: unknown) {
-      expect(error).toBeInstanceOf(ErrorUserExists);
-    }
+    // Act & Assert
+    await expect(createUser(user, password)).rejects.toThrow(ErrorUserExists);
   });
 
-  test("when user is created, expect a promise to be resolved with the user", async () => {
+  it("when user is created, expect a promise to be resolved with the user", async () => {
     // Arrange
     const user = "validuser";
     const password = "password";
