@@ -5,7 +5,7 @@ import { WrappedServer } from "./WrappedServer.js";
 import { exit } from "node:process";
 import { log } from "@rusty/util";
 import { handleWebRequests } from "@rusty/web";
-import { headerstoRecords } from "./headerstoRecords.js";
+import { headersToRecords } from "./headersToRecords.js";
 
 /**
  *
@@ -17,7 +17,7 @@ async function handleIncomingRequest(
   res: import("node:http").ServerResponse
 ) {
   const response = await handleWebRequests({
-    headers: headerstoRecords(req.headers),
+    headers: headersToRecords(req.headers),
     remoteAddress: req.socket.remoteAddress || "",
     method: req.method || "",
     url: req.url || "",

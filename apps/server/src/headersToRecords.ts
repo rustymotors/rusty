@@ -1,4 +1,4 @@
-export function headerstoRecords(
+export function headersToRecords(
   headers: import("node:http").IncomingHttpHeaders
 ): Record<string, string> {
   const result: Record<string, string> = {};

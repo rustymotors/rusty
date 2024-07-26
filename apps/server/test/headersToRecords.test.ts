@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { headerstoRecords } from "../src/headerstoRecords.js";
+import { headersToRecords } from "../src/headersToRecords.js";
 import type { IncomingHttpHeaders } from "node:http";
 
-describe("headerstoRecords", () => {
+describe("headersToRecords", () => {
   test("should convert headers to records", () => {
     const headers: IncomingHttpHeaders = {
       "content-type": "application/json",
@@ -16,7 +16,7 @@ describe("headerstoRecords", () => {
       accept: "application/json, text/html",
     };
 
-    const result = headerstoRecords(headers);
+    const result = headersToRecords(headers);
 
     expect(result).toEqual(expected);
   });
@@ -26,7 +26,7 @@ describe("headerstoRecords", () => {
 
     const expected = {};
 
-    const result = headerstoRecords(headers);
+    const result = headersToRecords(headers);
 
     expect(result).toEqual(expected);
   });
