@@ -4,7 +4,7 @@ import { ConsoleThread } from "./ConsoleThread.js";
 import { WrappedServer } from "./WrappedServer.js";
 import { exit } from "node:process";
 import { log } from "@rusty/util";
-import { handleWebRequests } from "@rusty/web";
+import { processWebRequests } from "@rusty/web";
 import { headersToRecords } from "./headersToRecords.js";
 
 /**
@@ -16,7 +16,7 @@ async function handleIncomingRequest(
   req: import("node:http").IncomingMessage,
   res: import("node:http").ServerResponse
 ) {
-  const response = await handleWebRequests({
+  const response = await processWebRequests({
     headers: headersToRecords(req.headers),
     remoteAddress: req.socket.remoteAddress || "",
     method: req.method || "",

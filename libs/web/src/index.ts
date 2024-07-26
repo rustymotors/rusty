@@ -1,19 +1,10 @@
 import { log } from "@rusty/util";
-import type { parsedHttpRequestData, rawHttpRequestData, RequestResponse } from "./types.js";
-import { handleAuthLogin } from "./services/AuthLogin.js";
+import type { rawHttpRequestData, RequestResponse } from "./types.js";
+import { RouteHandlers } from "./processors/index.js";
+export { User } from "./models/User.js";
+export type { UserAttributes } from "./models/User.js";
 
-const RouteHandlers: Record<
-  string,
-  (info: parsedHttpRequestData) => Promise<{
-    statusCode: number;
-    body: string;
-    headers: Record<string, string>;
-  }>
-> = {
-  "/AuthLogin": handleAuthLogin,
-};
-
-export async function handleWebRequests({
+export async function processWebRequests({
   headers,
   remoteAddress,
   method,
