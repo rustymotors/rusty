@@ -129,3 +129,28 @@ describe("AuthLogin -> createUser", () => {
     await expect(result).resolves.toEqual({ username: user, password });
   });
 });
+
+describe("AuthLogin -> deleteUser", () => {
+  it("when user is not found, expect a promise to be resolved with 0", async () => {
+    // Arrange
+    const user = "nonexistent";
+
+    // Assert
+    const result = await deleteUser(user);
+    expect(result).toEqual(0);
+  });
+
+  test("when user is deleted, expect a promise to be resolved with the number of rows affected (1)", async () => {
+    // Arrange
+    const user = "validuser";
+    const password = "password";
+    await deleteUser(user);
+
+    // Act
+    await createUser(user, password);
+    const result = await deleteUser(user);
+
+    // Assert
+    expect(result).toEqual(1);
+  });
+});

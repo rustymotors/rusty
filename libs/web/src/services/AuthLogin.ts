@@ -148,17 +148,11 @@ function generateLoginError(
  * @returns A Promise that resolves when the user is successfully deleted.
  * @throws If there is an error deleting the user.
  */
-export async function deleteUser(username: string): Promise<void> {
+export async function deleteUser(username: string): Promise<number> {
   log.debug("Deleting user");
-  try {
-    await User.destroy({
-      where: {
-        username,
-      },
-    });
-    log.debug("User deleted");
-  } catch (error: unknown) {
-    log.error(`Error deleting user: ${(error as Error).message}`);
-    throw error;
-  }
+  return await User.destroy({
+    where: {
+      username,
+    },
+  });
 }
