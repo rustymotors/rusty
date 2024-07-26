@@ -5,10 +5,8 @@ export function headerstoRecords(
   for (const [key, value] of Object.entries(headers)) {
     if (Array.isArray(value)) {
       result[key] = value.join(", ");
-    } else {
-      if (typeof key === "string" && typeof value === "string") {
-        result[key] = value;
-      }
+    } else if (typeof key === "string" && typeof value === "string") {
+      result[key] = value;
     }
   }
   return result;
