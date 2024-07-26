@@ -10,7 +10,8 @@ import { validateCredentials } from "../helpers.js";
 
 export async function createUser(
   username: string,
-  password: string
+  password: string,
+  customerId: number
 ): Promise<Omit<UserAttributes, "id">> {
   log.debug("AuthLogin.create");
 
@@ -18,9 +19,9 @@ export async function createUser(
 
   log.debug(`Creating user: ${username}`);
   try {
-    const user = await User.create({ username, password });
+    const user = await User.create({ username, password, customerId });
     log.debug(`User created: ${user ? user.username : "null"}`);
-    return { username: user.username, password: user.password };
+    return { username: user.username, password: user.password, customerId: user.customerId };
   } catch (error: unknown) {
     handleCreateUserError(error);
   }
@@ -54,6 +55,7 @@ export async function userLogin(
   return {
     username: user.username,
     password: user.password,
+    customerId: user.customerId,
   };
 }
 

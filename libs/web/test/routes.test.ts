@@ -41,9 +41,6 @@ describe("RouteHandlers", () => {
       pathname: "/AuthLogin",
       searchParams,
     };
-    await User.findOrCreate({
-      where: { username: "validuser", password: "password" },
-    });
 
     // Act
     const response = await RouteHandlers["/AuthLogin"](info);
@@ -68,6 +65,13 @@ describe("RouteHandlers", () => {
       pathname: "/AuthLogin",
       searchParams,
     };
+    await User.sync({ force: true });
+    await User.findOrCreate({
+      where: { username: "validuser", password: "password", customerId: 1 },
+    }).catch((error: unknown) => {
+      console.error((error as Error).message);
+      expect(true).toBe(false);
+    });
 
     // Act
     const response = await RouteHandlers["/AuthLogin"](info);

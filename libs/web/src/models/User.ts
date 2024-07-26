@@ -5,6 +5,7 @@ export interface UserAttributes {
   id: number;
   username: string;
   password: string;
+  customerId: number;
 }
 
 export interface UserCreationAttributes
@@ -17,6 +18,7 @@ export class User
   declare id: number;
   declare username: string;
   declare password: string;
+  declare customerId: number;
 }
 
 User.init(
@@ -33,6 +35,10 @@ User.init(
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    customerId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
