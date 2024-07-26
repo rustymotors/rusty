@@ -22,5 +22,5 @@
     }
   },
   "defaultBase": "main",
-  "nxCloudAccessToken": "MmE0NmEwNmEtMzYyNy00Yzk2LTkxYzYtYWY1ZTYwMzZlYmMzfHJlYWQ="
+  "nxCloudAccessToken": "NOT_A_REAL_TOKEN-USES_NX_CLOUD_ACCESS_TOKEN_SECRET_ENV"
 }
