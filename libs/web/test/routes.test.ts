@@ -1,6 +1,5 @@
 import { describe, expect, it, test } from "vitest";
-import { RouteHandlers } from "@rusty/web";
-import { User } from "#internal";
+import { RouteHandlers, User } from "#internal";
 
 describe("RouteHandlers", () => {
   it("should have a handler for /AuthLogin", () => {

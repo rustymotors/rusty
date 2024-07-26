@@ -1,4 +1,3 @@
-import { ErrorMissingCredentials } from "./errors.js";
 import type { parsedHttpRequestData } from "./types.js";
 
 /**
@@ -23,10 +22,10 @@ export function extractCredentials(info: parsedHttpRequestData): {
  */
   export function validateCredentials(username: string, password: string): void {
     if (username === "") {
-      throw new ErrorMissingCredentials("Username is required");
+      throw new Error("Username is required");
     }
   
     if (password === "") {
-      throw new ErrorMissingCredentials("Password is required");
+      throw new Error("Password is required");
     }
   }

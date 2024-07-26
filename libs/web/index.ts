@@ -1,9 +1,4 @@
-export { processWebRequests } from "./src/index.js";
-export { RouteHandlers } from "./src/processors/index.js";
-export {
-  ErrorUserNotFound,
-  handleCreateUserError,
-  ErrorMissingCredentials,
-  ErrorUserExists,
-} from "./src/errors.js";
-export { createUser, userLogin, deleteUser } from "./src/services/AuthLogin.js";
+/**
+ * External exports for the web library
+ */
+export { processWebRequests } from "./src/processors/processWebRequests.js";
