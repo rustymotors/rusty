@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "clean": "nx run-many -t clean",
-    "build": "nx run-many -t build",
+    "build": "./inject-token.sh",
     "check-types": "nx run-many -t check-types",
     "prestart": "nx run-many -t build",
     "start": "pnpm --filter @rusty/server run start",
