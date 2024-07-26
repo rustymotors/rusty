@@ -1,7 +1,7 @@
 import { User, type UserAttributes } from "../models/User.js";
 import type { parsedHttpRequestData, RequestResponse } from "../types.js";
 import { log } from "@rusty/util";
-import { ErrorMissingCredentials, ErrorUserExists } from "./errors.js";
+import { ErrorMissingCredentials, ErrorUserExists, ErrorUserNotFound } from "./errors.js";
 
 function validateCredentials(username: string, password: string): void {
   if (username === "") {
@@ -23,7 +23,7 @@ export async function createUser(
 
   log.debug(`Creating user: ${username}`);
   try {
-    const user = await createUserInDatabase(username, password);
+    const user = await User.create({ username, password });
     log.debug(`User created: ${user ? user.username : "null"}`);
     return { username: user.username, password: user.password };
   } catch (error: unknown) {
@@ -31,10 +31,17 @@ export async function createUser(
   }
 }
 
-async function createUserInDatabase(username: string, password: string): Promise<UserAttributes> {
-  return await User.create({ username, password });
-}
-
+/**
+ * Handles the error that occurs when creating a user.
+ * If the error message indicates that the username must be unique,
+ * it throws an ErrorUserExists with the original error as the cause.
+ * Otherwise, it throws a generic Error with the original error as the cause.
+ *
+ * @param error - The error that occurred during user creation.
+ * @throws {ErrorUserExists} - If the error message indicates that the username must be unique.
+ * @throws {Error} - If the error message does not indicate that the username must be unique.
+ * @returns {never} - This function never returns a value.
+ */
 function handleCreateUserError(error: unknown): never {
   if ((error as Error).message.includes("username must be unique")) {
     const err = new Error("Error creating user");
@@ -49,10 +56,17 @@ function handleCreateUserError(error: unknown): never {
   throw err;
 }
 
+/**
+ * Authenticates a user by their username and password.
+ * @param {string} username - The username of the user.
+ * @param {string} password - The password of the user.
+ * @returns {Promise<Omit<UserAttributes, "id">>} - A promise that resolves to the user attributes (excluding the "id" field).
+ * @throws {ErrorUserNotFound} - If the user is not found.
+ */
 export async function userLogin(
   username: string,
   password: string
-): Promise<Omit<UserAttributes, "id"> | null> {
+): Promise<Omit<UserAttributes, "id">> {
   log.debug("AuthLogin.login");
   log.debug(`Searching for user: ${username}`);
   const user = await User.findOne({
@@ -63,8 +77,7 @@ export async function userLogin(
   });
 
   if (!user) {
-    log.debug("User not found");
-    return null;
+    throw new ErrorUserNotFound("User not found");
   }
 
   log.debug("User found");
@@ -73,35 +86,54 @@ export async function userLogin(
     password: user.password,
   };
 }
+/**
+ * Handles the authentication login process.
+ *
+ * @param info - The parsed HTTP request data.
+ * @returns A promise that resolves to the request response.
+ */
 export async function handleAuthLogin(
   info: parsedHttpRequestData
 ): Promise<RequestResponse> {
-  const username = (info.searchParams.get("username") as string) || "";
-  const password = (info.searchParams.get("password") as string) || "";
+  const { username, password } = extractCredentials(info);
 
-  if (username === "" || password === "") {
+  try {
+    validateCredentials(username, password);
+
+    await userLogin(username, password);
+
+    const token = "abc123";
+
+    return constructLoginResponse(`Valid=TRUE\nTicket=${token}`);
+  } catch (error: unknown) {
+    log.error(`Error validating credentials: ${(error as Error).message}`);
     return generateLoginError(
       "INV-200",
       "Unable to login",
       "https://rusty-motors.com"
     );
   }
-
-  const user = await userLogin(username, password);
-
-  if (!user) {
-    return generateLoginError(
-      "INV-200",
-      "Unable to login",
-      "https://rusty-motors.com"
-    );
-  }
-
-  const token = "abc123";
-
-  return constructLoginResponse(`Valid=TRUE\nTicket=${token}`);
 }
 
+/**
+ * Extracts the username and password from the parsed HTTP request data.
+ * @param info - The parsed HTTP request data.
+ * @returns An object containing the extracted username and password.
+ */
+function extractCredentials(info: parsedHttpRequestData): {
+  username: string;
+  password: string;
+} {
+  const username = (info.searchParams.get("username") as string) || "";
+  const password = (info.searchParams.get("password") as string) || "";
+  return { username, password };
+}
+
+/**
+ * Constructs a login response object.
+ * @param body - The response body.
+ * @returns The constructed login response object.
+ */
 function constructLoginResponse(body = ""): RequestResponse {
   return {
     statusCode: 200,
@@ -110,6 +142,14 @@ function constructLoginResponse(body = ""): RequestResponse {
   };
 }
 
+/**
+ * Generates a login error response.
+ *
+ * @param errorCode - The error code. Default is "INV-200".
+ * @param errorText - The error text. Default is "Unable to login".
+ * @param errorUrl - The error URL. Default is "https://rusty-motors.com".
+ * @returns The login error response.
+ */
 function generateLoginError(
   errorCode = "INV-200",
   errorText = "Unable to login",
@@ -122,6 +162,13 @@ function generateLoginError(
   };
 }
 
+/**
+ * Deletes a user from the database.
+ *
+ * @param username - The username of the user to delete.
+ * @returns A Promise that resolves when the user is successfully deleted.
+ * @throws If there is an error deleting the user.
+ */
 export async function deleteUser(username: string): Promise<void> {
   log.debug("Deleting user");
   try {
