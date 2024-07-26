@@ -1,11 +1,7 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { RouteHandlers, User } from "#internal";
 
 describe("RouteHandlers", () => {
-  it("should have a handler for /AuthLogin", () => {
-    expect(RouteHandlers["/AuthLogin"]).toBeDefined();
-  });
-
   test("when /AuthLogin is called with a missing username, expect a generic error", async () => {
     // Arrange
     const searchParams = new URLSearchParams();
@@ -22,7 +18,7 @@ describe("RouteHandlers", () => {
     const response = await RouteHandlers["/AuthLogin"](info);
 
     // Assert
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200); // The legacy client expects a 200 status code and a specific response body
     expect(response.body).toBe(
       "reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com"
     );
@@ -45,7 +41,7 @@ describe("RouteHandlers", () => {
     const response = await RouteHandlers["/AuthLogin"](info);
 
     // Assert
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200); // The legacy client expects a 200 status code and a specific response body
     expect(response.body).toBe(
       "reasoncode=INV-200\nreasontext=Unable to login\nreasonurl=https://rusty-motors.com"
     );
