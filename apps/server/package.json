@@ -8,7 +8,8 @@
     "build": "tsc --build  --verbose",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "start": "node dist/src/index.js",
+    "prestart": "nx run @rusty/server:build",
+    "start": "node --env-file .env dist/src/index.js",
     "test": "vitest",
     "dev": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' --watch src/index.ts"
   },
@@ -30,6 +31,8 @@
   },
   "dependencies": {
     "@rusty/util": "workspace:*",
-    "@rusty/web": "workspace:*"
+    "@rusty/web": "workspace:*",
+    "@sentry/node": "^8.20.0",
+    "@sentry/profiling-node": "^8.20.0"
   }
 }
