@@ -20,6 +20,11 @@ export class ErrorUserExists extends Error {
 
 export class ErrorUserNotFound extends Error {
   name = "ErrorUserNotFound";
+
+  constructor(message: string) {
+    super(message);
+    this.name = "ErrorUserNotFound";
+  }
 }
 /**
  * Handles the error that occurs when creating a user.
