@@ -30,5 +30,5 @@ component_management:
 
 comment:
   layout: diff, flags, components, files, header, footer
-  hide_project_details: false
+  hide_project_coverage: false
   show_carryforward_flags: true
