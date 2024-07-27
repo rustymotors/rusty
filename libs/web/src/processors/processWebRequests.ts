@@ -8,7 +8,7 @@ export async function processWebRequests({
   method,
   url,
 }: rawHttpRequestData): Promise<RequestResponse> {
-  log.debug("web.handleWebRequests");
+  log.debug("processWebRequests");
 
   const { pathname, searchParams } = new URL(url, "http://localhost");
 
