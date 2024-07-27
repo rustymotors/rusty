@@ -27,3 +27,8 @@ component_management:
       paths:
         - "apps/*/test/**"
         - "libs/*/test/**"
+
+comment:
+  layout: diff, flags, components, files, header, footer
+  hide_project_details: false
+  show_carryforward_flags: true
