@@ -30,11 +30,9 @@ export async function processWebRequests({
   }
 
   log.debug("handler not found");
-  return new Promise((resolve) => {
-    resolve({
-      statusCode: 404,
-      body: "Not Found\n",
-      headers: { "Content-Type": "text/plain" },
-    });
-  });
+  return {
+    statusCode: 404,
+    body: "Not Found\n",
+    headers: { "Content-Type": "text/plain" },
+  };
 }
