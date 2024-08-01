@@ -2,25 +2,46 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "clean": {
-      "dependsOn": ["^clean"]
+      "dependsOn": [
+        "^clean"
+      ]
     },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["{projectRoot}/dist"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
       "cache": true
     },
     "check-types": {
-      "dependsOn": ["check-types", "^check-types"],
+      "dependsOn": [
+        "check-types",
+        "^check-types"
+      ],
       "cache": true
     },
     "test": {
-      "dependsOn": ["build"],
-      "outputs": ["{projectRoot}/coverage"]
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage"
+      ]
     },
     "lint": {
-      "dependsOn": ["build", "^lint"]
+      "dependsOn": [
+        "build",
+        "^lint"
+      ]
     }
   },
   "defaultBase": "main",
-  "nxCloudAccessToken": "__NX_CLOUD_AUTH_TOKEN__"
+  "nxCloudAccessToken": "NOT_A_REAL_TOKEN-USES_NX_CLOUD_ACCESS_TOKEN_SECRET_ENV",
+  "namedInputs": {
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ]
+  }
 }

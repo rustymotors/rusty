@@ -1,10 +1,10 @@
-name: Affected CI
+name: CI
 
 on:
   push:
     branches:
-      - !main
-      - !develop
+      - main
+      - develop
   pull_request:
 
 permissions:
@@ -41,7 +41,7 @@ jobs:
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
       # - run: pnpm exec nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
-      - run: make test
+      - run: make test_all
         env:
           NX_CLOUD_AUTH_TOKEN: ${{ secrets.NX_CLOUD_AUTH_TOKEN }}
       

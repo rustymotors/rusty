@@ -1,0 +1,1 @@
+export { getServerURL } from "./config.js";

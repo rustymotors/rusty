@@ -10,8 +10,4 @@ node_modules
 coverage
 *.xml
 
-# tell Git to ignore/stop ignoring this file
-#$ git update-index --assume-unchanged <file-to-ignore>
-#$ git update-index --no-assume-unchanged <file-to-ignore>
-# Credit: https://web.archive.org/web/20240726013834/https://practicalgit.com/blog/make-git-ignore-local-changes-to-tracked-files.html
-nx.json
+.env

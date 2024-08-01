@@ -1,5 +1,5 @@
 {
-  "name": "@rusty/web",
+  "name": "@rusty/config",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -37,9 +37,6 @@
     "@rusty/util": "workspace:*",
     "@sentry/node": "^8.20.0",
     "@sentry/profiling-node": "^8.20.0",
-    "@rusty/config": "workspace:*",
-    "pino": "9.3.1",
-    "sequelize": "6.37.3",
-    "sqlite3": "5.1.7"
+    "pino": "9.3.1"
   }
 }

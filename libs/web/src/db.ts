@@ -5,7 +5,7 @@ const DATABASE_URL = process.env.DATABASE_URL || ":memory:";
 export const db = new Sequelize({
   dialect: "sqlite",
   storage: DATABASE_URL,
-  logging: console.log, // Enable logging
+  logging: false,
 });
 
 db.authenticate()
