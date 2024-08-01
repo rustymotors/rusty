@@ -1,6 +1,9 @@
 test:
 	pnpm exec nx affected -t lint test build
 
+test_all:
+	pnpm exec nx run-many --target=test --all
+
 codecov_install:
 	pip install codecov-cli
 
