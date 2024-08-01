@@ -1,9 +1,10 @@
-name: CI
+name: Affected CI
 
 on:
   push:
     branches:
-      - main
+      - !main
+      - !develop
   pull_request:
 
 permissions:
