@@ -33,7 +33,7 @@
   "dependencies": {
     "@rusty/util": "workspace:*",
     "pino": "9.3.1",
-    "sequelize": "6.37.3",
+    "sequelize": "6.37.4",
     "sqlite3": "5.1.7"
   }
 }
